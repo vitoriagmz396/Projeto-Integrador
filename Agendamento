@@ -1,0 +1,96 @@
+# Estruturas de dados para armazenar clientes, serviços e agendamentos
+clientes = []
+servicos = []
+agendamentos = []
+
+# Funções para gerenciar o sistema
+def cadastrar_cliente():
+    nome = input("Digite o nome do cliente: ")
+    telefone = input("Digite o telefone do cliente: ")
+    cliente = {"id": len(clientes) + 1, "nome": nome, "telefone": telefone}
+    clientes.append(cliente)
+    print(f"Cliente {nome} cadastrado com sucesso!")
+
+def cadastrar_servico():
+    nome = input("Digite o nome do serviço: ")
+    preco = float(input("Digite o preço do serviço: "))
+    duracao = int(input("Digite a duração do serviço (em minutos): "))
+    servico = {"id": len(servicos) + 1, "nome": nome, "preco": preco, "duracao": duracao}
+    servicos.append(servico)
+    print(f"Serviço {nome} cadastrado com sucesso!")
+
+def agendar_servico():
+    if not clientes:
+        print("Nenhum cliente cadastrado! Cadastre um cliente primeiro.")
+        return
+    if not servicos:
+        print("Nenhum serviço cadastrado! Cadastre um serviço primeiro.")
+        return
+
+    print("Clientes disponíveis:")
+    for cliente in clientes:
+        print(f"{cliente['id']} - {cliente['nome']} (Telefone: {cliente['telefone']})")
+
+    cliente_id = int(input("Digite o ID do cliente: "))
+    cliente = next((c for c in clientes if c["id"] == cliente_id), None)
+    if not cliente:
+        print("Cliente não encontrado!")
+        return
+
+    print("Serviços disponíveis:")
+    for servico in servicos:
+        print(f"{servico['id']} - {servico['nome']} (Preço: R${servico['preco']:.2f}, Duração: {servico['duracao']} minutos)")
+
+    servico_id = int(input("Digite o ID do serviço: "))
+    servico = next((s for s in servicos if s["id"] == servico_id), None)
+    if not servico:
+        print("Serviço não encontrado!")
+        return
+
+    data_hora = input("Digite a data e hora do agendamento (YYYY-MM-DD HH:MM): ")
+
+    agendamento = {
+        "id": len(agendamentos) + 1,
+        "cliente": cliente,
+        "servico": servico,
+        "data_hora": data_hora,
+        "status": "Agendado"
+    }
+    agendamentos.append(agendamento)
+    print(f"Agendamento realizado com sucesso para {cliente['nome']} no serviço {servico['nome']} em {data_hora}.")
+
+def visualizar_agendamentos():
+    if not agendamentos:
+        print("Nenhum agendamento registrado!")
+        return
+    print("Agendamentos:")
+    for agendamento in agendamentos:
+        print(f"ID: {agendamento['id']} | Cliente: {agendamento['cliente']['nome']} | Serviço: {agendamento['servico']['nome']} | Data e Hora: {agendamento['data_hora']} | Status: {agendamento['status']}")
+
+# Menu principal
+def menu():
+    while True:
+        print("\n=== Sistema de Agendamento de Salão de Cabeleireiro ===")
+        print("1. Cadastrar Cliente")
+        print("2. Cadastrar Serviço")
+        print("3. Agendar Serviço")
+        print("4. Visualizar Agendamentos")
+        print("5. Sair")
+
+        opcao = input("Escolha uma opção: ")
+        if opcao == "1":
+            cadastrar_cliente()
+        elif opcao == "2":
+            cadastrar_servico()
+        elif opcao == "3":
+            agendar_servico()
+        elif opcao == "4":
+            visualizar_agendamentos()
+        elif opcao == "5":
+            print("Saindo do sistema...")
+            break
+        else:
+            print("Opção inválida! Tente novamente.")
+
+# Executar o menu
+menu()
